@@ -13,6 +13,7 @@ const xss = require("xss-clean");
 const morgan = require("morgan");
 
 const { URI } = require("./secret");
+const { create } = require("lodash");
 
 const app = express();
 
@@ -45,13 +46,14 @@ mongoose
     }
   });
 
-fs.readdirSync("./src/routes").map(function (r) {
-  return app.use("/api/v1", apiLimiter, require(`./src/routes/${r}`));
+app.use("/api/v1/employee", require("./src/routes/employeeRoutes"));
+
+app.use((req, res, next) => {
+  next(createError(404, "Route not found"));
 });
 
-// Universal route for handling unmatched paths
-app.all("*", (req, res) => {
-  res.status(404).send("404 - Page not found");
+app.use((err, req, res, next) => {
+  next(createError(err.status, err.message));
 });
 
 module.exports = app;
