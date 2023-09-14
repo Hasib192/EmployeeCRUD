@@ -4,7 +4,8 @@ const employeeSchema = mongoose.Schema(
   {
     emp_eid: Number,
     emp_name: String,
-    emp_gender: Boolean,
+    emp_img: String,
+    emp_gender: String,
     emp_phn_num: String,
     emp_email: String,
     emp_DOB: Date,

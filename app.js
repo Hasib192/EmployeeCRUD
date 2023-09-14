@@ -13,7 +13,6 @@ const xss = require("xss-clean");
 const morgan = require("morgan");
 
 const { URI } = require("./secret");
-const { create } = require("lodash");
 
 const app = express();
 
@@ -46,7 +45,9 @@ mongoose
     }
   });
 
-app.use("/api/v1/employee", require("./src/routes/employeeRoutes"));
+app.use(express.static("client/dist"));
+
+app.use("/api/v1/employee", apiLimiter, require("./src/routes/employeeRoutes"));
 
 app.use((req, res, next) => {
   next(createError(404, "Route not found"));
@@ -55,5 +56,9 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   next(createError(err.status, err.message));
 });
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+// });
 
 module.exports = app;

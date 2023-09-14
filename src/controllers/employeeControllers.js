@@ -4,14 +4,17 @@ const Employee = require("../models/employeeModel");
 
 exports.create = async (req, res) => {
   try {
-    let { emp_eid, emp_name, emp_gender, emp_phn_num, emp_email, emp_DOB, emp_designation, emp_joining_date } = req.body;
+    let { emp_eid, emp_name, emp_img, emp_gender, emp_phn_num, emp_email, emp_DOB, emp_designation, emp_joining_date } = req.body;
     if (!emp_eid || !validator.isInt(emp_eid)) {
       throw createError(400, "Invalid Eid");
     }
     if (!emp_name.trim() || !validator.isAlpha(emp_name.trim(), ["en-US"], { ignore: " " })) {
       throw createError(400, "Invalid Name");
     }
-    if (!validator.isBoolean(emp_gender)) {
+    if (!emp_img.trim()) {
+      throw createError(400, "Invalid Image");
+    }
+    if (!emp_gender.trim()) {
       throw createError(400, "Invalid Gender");
     }
     if (!emp_phn_num.trim() || !validator.isMobilePhone(emp_phn_num, ["bn-BD"])) {
@@ -33,6 +36,7 @@ exports.create = async (req, res) => {
     let result = await Employee.create({
       emp_eid,
       emp_name,
+      emp_img,
       emp_gender,
       emp_phn_num,
       emp_email,
